@@ -1,14 +1,207 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.4">
-  <style type="text/css">
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📱 網頁版記帳本</title>
+
+    <style>
+body {
+    /* 使用系統字體，在 iOS 上更自然 */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5; /* 輕微的背景色 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 居中對齊 */
+    min-height: 100vh; /* 確保內容至少佔滿整個視窗高度 */
+}
+
+/* 確保所有元素計算方式一致 */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* ------------------------------------- */
+/* 容器和標題 */
+/* ------------------------------------- */
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* 限制最大寬度，避免在桌面或平板上過寬 */
+    max-width: 400px; 
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+/* ------------------------------------- */
+/* 表單元素樣式 */
+/* ------------------------------------- */
+label {
+    display: block; /* 讓標籤獨佔一行 */
+    margin-bottom: 8px;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* 輸入框和選擇框的統一風格 */
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    /* 移除 iOS 設備上輸入框的默認樣式 */
+    -webkit-appearance: none; 
+    appearance: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #007aff; /* iOS 藍色作為焦點顏色 */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* ------------------------------------- */
+/* 按鈕樣式 */
+/* ------------------------------------- */
+button[type="submit"] {
+    width: 100%;
+    background-color: #007aff; /* iOS 標誌性的藍色 */
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 25px;
+    transition: background-color 0.3s;
+    /* 移除 iOS 設備上按鈕的默認樣式 */
+    -webkit-appearance: none; 
+    appearance: none;
+}
+
+button[type="submit"]:hover {
+    background-color: #005bb5;
+}
+
+/* ------------------------------------- */
+/* 訊息提示 */
+/* ------------------------------------- */
+#message {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* 提示成功的樣式 */
+#message:contains('✅') {
+    color: #1a7a1a;
+    background-color: #e6ffe6;
+}
+
+/* 提示失敗或錯誤的樣式 */
+#message:contains('❌') {
+    color: #cc0000;
+    background-color: #ffe6e6;
+}
+
+/* 媒體查詢：優化手機視圖 */
+@media (max-width: 500px) {
+    .container {
+        margin: 0;
+        padding: 15px;
+        border-radius: 0; /* 在小屏幕上，邊緣對齊更好看 */
+        box-shadow: none;
+    }
+
+    body {
+        /* 在手機上可以移除 min-height: 100vh 以避免瀏覽器地址欄造成的問題 */
+        align-items: flex-start; 
+        padding-top: 20px;
+    }
+}
+    </style>
+
 </head>
 <body>
+    <div class="container">
+        <h1>記帳本</h1>
+        <form id="expenseForm">
+            <label for="amount">金額 (Amount):</label>
+            <input type="number" id="amount" required>
+            
+            <label for="category">類別 (Category):</label>
+            <select id="category" required>
+                <option value="食物">食物</option>
+                <option value="交通">交通</option>
+                <option value="娛樂">娛樂</option>
+                <option value="收入">收入</option>
+            </select>
+            
+            <label for="notes">備註 (Notes):</label>
+            <input type="text" id="notes">
+            
+            <button type="submit">記錄</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // 您的 JavaScript 程式碼依然放在 <script> 標籤內
+        const GAS_API_URL = '您在步驟三複製的 Web App URL'; 
+        // ... (省略 JavaScript 內容，保持不變) ...
+    </script>
+</body>
+</html>
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>記帳本</h1>
+        <form id="expenseForm">
+            <label for="amount">金額 (Amount):</label>
+            <input type="number" id="amount" required>
+            
+            <label for="category">類別 (Category):</label>
+            <select id="category" required>
+                <option value="食物">食物</option>
+                <option value="交通">交通</option>
+                <option value="娛樂">娛樂</option>
+                <option value="收入">收入</option>
+            </select>
+            
+            <label for="notes">備註 (Notes):</label>
+            <input type="text" id="notes">
+            
+            <button type="submit">記錄</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // 您的 JavaScript 程式碼依然放在 <script> 標籤內
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwPl8Qfy09GvwnOAh6jPjHqTFfc09mT1TMvnTAyLw8bUMVaih3PlVSC79cr4K7knR_dpQ/exec'; 
+        // ... (省略 JavaScript 內容，保持不變) ...
+    </script>
 </body>
 </html>
