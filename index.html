@@ -4,144 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📱 網頁版記帳本</title>
-
+    
     <style>
-       /* ------------------------------------- */
-/* 基礎設定 */
-/* ------------------------------------- */
-body {
-    /* 使用系統字體，在 iOS 上更自然 */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5; /* 輕微的背景色 */
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center; /* 居中對齊 */
-    min-height: 100vh; /* 確保內容至少佔滿整個視窗高度 */
-}
+        /* ------------------------------------- */
+        /* 基礎設定 - 保持手機優化 */
+        /* ------------------------------------- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
 
-/* 確保所有元素計算方式一致 */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
+        /* 容器和標題 */
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; 
+        }
 
-/* ------------------------------------- */
-/* 容器和標題 */
-/* ------------------------------------- */
-.container {
-    background-color: #ffffff;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    /* 限制最大寬度，避免在桌面或平板上過寬 */
-    max-width: 400px; 
-}
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
 
-h1 {
-    text-align: center;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 1.8em;
-}
+        /* ------------------------------------- */
+        /* 表單元素樣式 */
+        /* ------------------------------------- */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #555;
+        }
 
-/* ------------------------------------- */
-/* 表單元素樣式 */
-/* ------------------------------------- */
-label {
-    display: block; /* 讓標籤獨佔一行 */
-    margin-bottom: 8px;
-    margin-top: 15px;
-    font-weight: 600;
-    color: #555;
-}
+        /* 輸入框和選擇框的統一風格 */
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            -webkit-appearance: none; 
+            appearance: none;
+        }
 
-/* 輸入框和選擇框的統一風格 */
-input[type="number"],
-input[type="text"],
-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: border-color 0.3s;
-    /* 移除 iOS 設備上輸入框的默認樣式 */
-    -webkit-appearance: none; 
-    appearance: none;
-}
+        input:focus, select:focus {
+            border-color: #007aff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
 
-input:focus,
-select:focus {
-    border-color: #007aff; /* iOS 藍色作為焦點顏色 */
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-}
+        /* 新增：類型選擇器佈局 */
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
 
-/* ------------------------------------- */
-/* 按鈕樣式 */
-/* ------------------------------------- */
-button[type="submit"] {
-    width: 100%;
-    background-color: #007aff; /* iOS 標誌性的藍色 */
-    color: white;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: bold;
-    margin-top: 25px;
-    transition: background-color 0.3s;
-    /* 移除 iOS 設備上按鈕的默認樣式 */
-    -webkit-appearance: none; 
-    appearance: none;
-}
+        .type-selector input[type="radio"] {
+            display: none; /* 隱藏原生 radio 按鈕 */
+        }
 
-button[type="submit"]:hover {
-    background-color: #005bb5;
-}
+        .type-selector label {
+            flex-grow: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            font-weight: 500;
+            margin: 0; /* 重設 label 的 margin */
+            transition: all 0.2s;
+        }
 
-/* ------------------------------------- */
-/* 訊息提示 */
-/* ------------------------------------- */
-#message {
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 6px;
-    font-weight: 600;
-}
+        /* 支出選中樣式 */
+        #typeExpense:checked + label {
+            background-color: #ffcccc; /* 輕微紅色背景 */
+            border-color: #cc0000;
+            color: #cc0000;
+        }
 
-/* 提示成功的樣式 */
-#message:contains('✅') {
-    color: #1a7a1a;
-    background-color: #e6ffe6;
-}
+        /* 收入選中樣式 */
+        #typeIncome:checked + label {
+            background-color: #ccffcc; /* 輕微綠色背景 */
+            border-color: #008000;
+            color: #008000;
+        }
 
-/* 提示失敗或錯誤的樣式 */
-#message:contains('❌') {
-    color: #cc0000;
-    background-color: #ffe6e6;
-}
 
-/* 媒體查詢：優化手機視圖 */
-@media (max-width: 500px) {
-    .container {
-        margin: 0;
-        padding: 15px;
-        border-radius: 0; /* 在小屏幕上，邊緣對齊更好看 */
-        box-shadow: none;
-    }
+        /* ------------------------------------- */
+        /* 按鈕樣式 */
+        /* ------------------------------------- */
+        button[type="submit"] {
+            width: 100%;
+            background-color: #007aff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 25px;
+            transition: background-color 0.3s, opacity 0.3s;
+            -webkit-appearance: none; 
+            appearance: none;
+        }
 
-    body {
-        /* 在手機上可以移除 min-height: 100vh 以避免瀏覽器地址欄造成的問題 */
-        align-items: flex-start; 
-        padding-top: 20px;
-    }
-}
+        button[type="submit"]:hover:not(:disabled) {
+            background-color: #005bb5;
+        }
+
+        button[type="submit"]:disabled {
+            background-color: #a0a0a0; /* 按鈕禁用時變灰 */
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* ------------------------------------- */
+        /* 訊息提示 */
+        /* ------------------------------------- */
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            min-height: 40px; /* 確保有足夠空間顯示提示 */
+        }
+        .message-success {
+            color: #008000;
+            background-color: #e6ffe6;
+            border: 1px solid #ccffcc;
+        }
+        .message-error {
+            color: #cc0000;
+            background-color: #ffe6e6;
+            border: 1px solid #ffcccc;
+        }
+        .message-sending {
+            color: #007aff;
+            background-color: #e6f0ff;
+            border: 1px solid #ccddff;
+        }
+        
+        /* 媒體查詢：優化手機視圖 */
+        @media (max-width: 500px) {
+            .container {
+                margin: 0;
+                padding: 15px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            body {
+                align-items: flex-start; 
+                padding-top: 20px;
+            }
+        }
     </style>
 
 </head>
@@ -149,29 +185,122 @@ button[type="submit"]:hover {
     <div class="container">
         <h1>記帳本</h1>
         <form id="expenseForm">
-            <label for="amount">金額 (Amount):</label>
-            <input type="number" id="amount" required>
             
-            <label for="category">類別 (Category):</label>
+            <label>交易類型:</label>
+            <div class="type-selector">
+                <input type="radio" id="typeExpense" name="type" value="expense" checked>
+                <label for="typeExpense">支出</label>
+                
+                <input type="radio" id="typeIncome" name="type" value="income">
+                <label for="typeIncome">收入</label>
+            </div>
+            
+            <label for="amount">金額:</label>
+            <input type="number" id="amount" required min="0.01" step="0.01">
+            
+            <label for="category">類別:</label>
             <select id="category" required>
-                <option value="食物">食物</option>
-                <option value="交通">交通</option>
-                <option value="娛樂">娛樂</option>
-                <option value="收入">收入</option>
+                <option value="食物">食物 (支出)</option>
+                <option value="交通">交通 (支出)</option>
+                <option value="娛樂">娛樂 (支出)</option>
+                <option value="薪水">薪水 (收入)</option>
+                <option value="其他">其他</option>
             </select>
             
-            <label for="notes">備註 (Notes):</label>
+            <label for="notes">備註:</label>
             <input type="text" id="notes">
             
-            <button type="submit">記錄</button>
+            <button type="submit" id="submitButton">記錄</button>
         </form>
         <p id="message"></p>
     </div>
 
     <script>
-        // 您的 JavaScript 程式碼依然放在 <script> 標籤內
+        // 📌 替換為您部署的 Web App URL
         const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwPl8Qfy09GvwnOAh6jPjHqTFfc09mT1TMvnTAyLw8bUMVaih3PlVSC79cr4K7knR_dpQ/exec'; 
-        // ... (省略 JavaScript 內容，保持不變) ...
+
+        const form = document.getElementById('expenseForm');
+        const submitButton = document.getElementById('submitButton');
+        const messageElement = document.getElementById('message');
+        const amountInput = document.getElementById('amount');
+        const typeExpense = document.getElementById('typeExpense');
+        const typeIncome = document.getElementById('typeIncome');
+
+        // 輔助函數：設置訊息提示
+        function setMessage(text, type = 'default') {
+            messageElement.textContent = text;
+            messageElement.className = ''; // 清除所有類名
+            if (type === 'success') {
+                messageElement.classList.add('message-success');
+            } else if (type === 'error') {
+                messageElement.classList.add('message-error');
+            } else if (type === 'sending') {
+                messageElement.classList.add('message-sending');
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            submitButton.disabled = true; // 禁用按鈕防止重複提交
+            setMessage('📡 傳送中...', 'sending');
+
+            let amount = parseFloat(amountInput.value);
+            const transactionType = document.querySelector('input[name="type"]:checked').value;
+            
+            // 邏輯核心：根據類型處理金額正負
+            if (transactionType === 'expense') {
+                // 如果是支出，確保金額是負數或保持正數讓後端處理 (這裡我們發送正數，讓後端決定如何記錄)
+                // 為了保持前端簡單，我們發送絕對值，但我們將類別也發送給 Apps Script 判斷
+            } else if (transactionType === 'income') {
+                // 如果是收入，金額為正數
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                setMessage('❌ 請輸入有效的金額！', 'error');
+                submitButton.disabled = false;
+                return;
+            }
+            
+            const formData = {
+                date: new Date().toISOString(),
+                amount: amount, // 發送絕對值
+                category: document.getElementById('category').value,
+                notes: document.getElementById('notes').value,
+                type: transactionType // 📌 新增：將類型也發送給 Apps Script
+            };
+            
+            fetch(GAS_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP 錯誤: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    setMessage('✅ 記錄成功！', 'success');
+                    form.reset(); // 清空表單
+                    // 確保類型選擇器重置到支出
+                    typeExpense.checked = true; 
+                } else {
+                    setMessage(`❌ 記錄失敗: ${data.message || '請檢查 Apps Script 部署狀態'}`, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                setMessage(`❌ 連線或 API 錯誤: ${error.message || '請檢查 GAS URL'}`, 'error');
+            })
+            .finally(() => {
+                submitButton.disabled = false; // 無論成功失敗，都重新啟用按鈕
+            });
+        });
     </script>
 </body>
 </html>
